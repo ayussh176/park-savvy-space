@@ -5,11 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
+import { ManageParkingDialog } from '@/components/ManageParkingDialog';
 import { mockParkingSpaces } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 
 const OwnerDashboard = () => {
   const { user } = useAuth();
+  const [selectedParkingSpace, setSelectedParkingSpace] = useState<any>(null);
+  const [showManageDialog, setShowManageDialog] = useState(false);
   
   // Filter parking spaces owned by current user
   const ownedParkingSpaces = mockParkingSpaces.filter(space => space.owner.id === user?.id || space.owner.id === 'owner1');
@@ -145,7 +148,14 @@ const OwnerDashboard = () => {
                               </span>
                             </div>
                             <div className="flex gap-2">
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedParkingSpace(space);
+                                  setShowManageDialog(true);
+                                }}
+                              >
                                 <Settings className="h-4 w-4 mr-1" />
                                 Manage
                               </Button>
@@ -247,6 +257,14 @@ const OwnerDashboard = () => {
           </div>
         </div>
       </div>
+
+      {selectedParkingSpace && (
+        <ManageParkingDialog
+          open={showManageDialog}
+          onOpenChange={setShowManageDialog}
+          parkingSpace={selectedParkingSpace}
+        />
+      )}
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { MapPin, Navigation } from 'lucide-react';
+import { MapPin, Navigation, Search } from 'lucide-react';
 import { ParkingSpace } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface MapComponentProps {
   parkingSpaces: ParkingSpace[];
@@ -10,6 +11,7 @@ interface MapComponentProps {
 
 export function MapComponent({ parkingSpaces, userLocation }: MapComponentProps) {
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(userLocation || null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (userLocation) {
@@ -32,6 +34,18 @@ export function MapComponent({ parkingSpaces, userLocation }: MapComponentProps)
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-primary-light to-accent-light rounded-lg">
+      {/* Search Bar */}
+      <div className="absolute top-4 left-4 right-4 z-10">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by pincode, address, or city..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-background/95 backdrop-blur-sm"
+          />
+        </div>
+      </div>
       {/* Map Placeholder - For now showing a styled representation */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">

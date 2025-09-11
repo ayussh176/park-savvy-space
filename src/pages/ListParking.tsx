@@ -239,6 +239,20 @@ const ListParking = () => {
         </div>
 
         <div>
+          <Label htmlFor="parking-category">Parking Category *</Label>
+          <Select onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select parking category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="commercial">Commercial Parking</SelectItem>
+              <SelectItem value="free">Free Parking (Public)</SelectItem>
+              <SelectItem value="private">Private Space</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
           <Label>Amenities</Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
             {amenityOptions.map((amenity) => (

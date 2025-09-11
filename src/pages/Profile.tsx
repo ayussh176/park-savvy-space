@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { User, Mail, Phone, Car, Calendar, Settings, CreditCard } from 'lucide-react';
+import { User, Mail, Phone, Car, Calendar, Settings, CreditCard, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Header } from '@/components/Header';
+import { VehicleManagementDialog } from '@/components/VehicleManagementDialog';
+import { WalletDialog } from '@/components/WalletDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockBookings } from '@/data/mockData';
 import { toast } from '@/hooks/use-toast';
@@ -13,6 +15,8 @@ import { toast } from '@/hooks/use-toast';
 const Profile = () => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [showVehicleDialog, setShowVehicleDialog] = useState(false);
+  const [showWalletDialog, setShowWalletDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -116,7 +120,9 @@ const Profile = () => {
                   <Car className="h-5 w-5" />
                   My Vehicles
                 </CardTitle>
-                <Button variant="outline">Add Vehicle</Button>
+                <Button variant="outline" onClick={() => setShowVehicleDialog(true)}>
+                  Manage Vehicles
+                </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -219,11 +225,23 @@ const Profile = () => {
                   <Settings className="h-4 w-4 mr-2" />
                   Account Settings
                 </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => setShowWalletDialog(true)}
+                >
+                  <Wallet className="h-4 w-4 mr-2" />
+                  My Wallet
+                </Button>
                 <Button variant="outline" className="w-full justify-start">
                   <CreditCard className="h-4 w-4 mr-2" />
                   Payment Methods
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => setShowVehicleDialog(true)}
+                >
                   <Car className="h-4 w-4 mr-2" />
                   Manage Vehicles
                 </Button>
@@ -257,6 +275,16 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      <VehicleManagementDialog
+        open={showVehicleDialog}
+        onOpenChange={setShowVehicleDialog}
+      />
+
+      <WalletDialog
+        open={showWalletDialog}
+        onOpenChange={setShowWalletDialog}
+      />
     </div>
   );
 };

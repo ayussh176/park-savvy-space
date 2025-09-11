@@ -4,6 +4,7 @@ export type ParkingSpace = {
   address: string;
   coordinates: [number, number];
   type: 'free' | 'paid' | 'open' | 'underground' | 'covered';
+  category: 'commercial' | 'free' | 'private';
   vehicleTypes: string[];
   pricePerHour: number;
   totalSlots: number;
@@ -50,6 +51,7 @@ export const mockParkingSpaces: ParkingSpace[] = [
     address: '123 Main Street, Downtown',
     coordinates: [77.2090, 28.6139],
     type: 'covered',
+    category: 'commercial',
     vehicleTypes: ['car', 'bike'],
     pricePerHour: 50,
     totalSlots: 100,
@@ -77,6 +79,7 @@ export const mockParkingSpaces: ParkingSpace[] = [
     address: '456 Metro Road, Business District',
     coordinates: [77.2167, 28.6167],
     type: 'underground',
+    category: 'commercial',
     vehicleTypes: ['car', 'bike'],
     pricePerHour: 30,
     totalSlots: 200,
@@ -104,6 +107,7 @@ export const mockParkingSpaces: ParkingSpace[] = [
     address: '789 Health Avenue, Medical District',
     coordinates: [77.2200, 28.6100],
     type: 'open',
+    category: 'free',
     vehicleTypes: ['car', 'bike'],
     pricePerHour: 40,
     totalSlots: 150,
@@ -123,6 +127,34 @@ export const mockParkingSpaces: ParkingSpace[] = [
       type: i < 120 ? 'car' : i < 140 ? 'bike' : 'disabled',
       status: Math.random() > 0.5 ? 'booked' : 'available',
       pricePerHour: i < 120 ? 40 : i < 140 ? 20 : 40,
+    }))
+  },
+  {
+    id: '4',
+    name: 'Residential Private Space',
+    address: '15 Green Valley, Sector 12',
+    coordinates: [77.2150, 28.6080],
+    type: 'open',
+    category: 'private',
+    vehicleTypes: ['car'],
+    pricePerHour: 25,
+    totalSlots: 5,
+    availableSlots: 3,
+    rating: 4.3,
+    distance: 0.8,
+    image: '/api/placeholder/400/300',
+    amenities: ['CCTV', 'Gated'],
+    owner: {
+      id: 'owner4',
+      name: 'Private Owner',
+      phone: '+91 9876543213'
+    },
+    slots: Array.from({ length: 5 }, (_, i) => ({
+      id: `slot-${i + 1}`,
+      slotNumber: `P${i + 1}`,
+      type: 'car',
+      status: Math.random() > 0.4 ? 'available' : 'booked',
+      pricePerHour: 25,
     }))
   }
 ];
