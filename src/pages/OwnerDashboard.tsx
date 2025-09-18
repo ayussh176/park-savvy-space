@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { ManageParkingDialog } from '@/components/ManageParkingDialog';
+import { SubscriptionPlansDialog } from '@/components/SubscriptionPlansDialog';
 import { mockParkingSpaces } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -13,6 +14,7 @@ const OwnerDashboard = () => {
   const { user } = useAuth();
   const [selectedParkingSpace, setSelectedParkingSpace] = useState<any>(null);
   const [showManageDialog, setShowManageDialog] = useState(false);
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   
   // Filter parking spaces owned by current user
   const ownedParkingSpaces = mockParkingSpaces.filter(space => space.owner.id === user?.id || space.owner.id === 'owner1');
@@ -225,7 +227,12 @@ const OwnerDashboard = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     List up to 5 parking spaces
                   </p>
-                  <Button variant="hero" size="sm" className="w-full">
+                  <Button 
+                    variant="hero" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => setShowSubscriptionDialog(true)}
+                  >
                     Upgrade Plan
                   </Button>
                 </div>
@@ -265,6 +272,11 @@ const OwnerDashboard = () => {
           parkingSpace={selectedParkingSpace}
         />
       )}
+
+      <SubscriptionPlansDialog
+        open={showSubscriptionDialog}
+        onOpenChange={setShowSubscriptionDialog}
+      />
     </div>
   );
 };

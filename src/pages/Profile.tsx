@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Header } from '@/components/Header';
 import { VehicleManagementDialog } from '@/components/VehicleManagementDialog';
 import { WalletDialog } from '@/components/WalletDialog';
+import { PaymentMethodsDialog } from '@/components/PaymentMethodsDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockBookings } from '@/data/mockData';
 import { toast } from '@/hooks/use-toast';
@@ -17,6 +18,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showVehicleDialog, setShowVehicleDialog] = useState(false);
   const [showWalletDialog, setShowWalletDialog] = useState(false);
+  const [showPaymentMethodsDialog, setShowPaymentMethodsDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -233,7 +235,11 @@ const Profile = () => {
                   <Wallet className="h-4 w-4 mr-2" />
                   My Wallet
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => setShowPaymentMethodsDialog(true)}
+                >
                   <CreditCard className="h-4 w-4 mr-2" />
                   Payment Methods
                 </Button>
@@ -284,6 +290,11 @@ const Profile = () => {
       <WalletDialog
         open={showWalletDialog}
         onOpenChange={setShowWalletDialog}
+      />
+
+      <PaymentMethodsDialog
+        open={showPaymentMethodsDialog}
+        onOpenChange={setShowPaymentMethodsDialog}
       />
     </div>
   );

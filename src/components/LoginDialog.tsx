@@ -150,10 +150,26 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
 
               <TabsContent value="customer" className="space-y-4">
                 <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="customer-first-name">First Name</Label>
+                      <Input
+                        id="customer-first-name"
+                        placeholder="John"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="customer-last-name">Last Name</Label>
+                      <Input
+                        id="customer-last-name"
+                        placeholder="Doe"
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <Label htmlFor="signup-customer-email">Email</Label>
+                    <Label htmlFor="customer-signup-email">Email</Label>
                     <Input
-                      id="signup-customer-email"
+                      id="customer-signup-email"
                       type="email"
                       placeholder="customer@example.com"
                       value={email}
@@ -161,13 +177,36 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="signup-customer-password">Password</Label>
+                    <Label htmlFor="customer-phone">Phone Number</Label>
                     <Input
-                      id="signup-customer-password"
+                      id="customer-phone"
+                      type="tel"
+                      placeholder="+91 9876543210"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="customer-address">Address</Label>
+                    <Input
+                      id="customer-address"
+                      placeholder="123 Main Street, City"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="customer-signup-password">Password</Label>
+                    <Input
+                      id="customer-signup-password"
                       type="password"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="customer-confirm-password">Confirm Password</Label>
+                    <Input
+                      id="customer-confirm-password"
+                      type="password"
+                      placeholder="••••••••"
                     />
                   </div>
                   <Button 
@@ -175,17 +214,33 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                     onClick={() => handleLogin('customer')}
                     disabled={loading || !email || !password}
                   >
-                    {loading ? 'Creating account...' : 'Sign up as Customer'}
+                    {loading ? 'Creating account...' : 'Create Customer Account'}
                   </Button>
                 </div>
               </TabsContent>
 
               <TabsContent value="owner" className="space-y-4">
                 <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="owner-first-name">First Name</Label>
+                      <Input
+                        id="owner-first-name"
+                        placeholder="John"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="owner-last-name">Last Name</Label>
+                      <Input
+                        id="owner-last-name"
+                        placeholder="Doe"
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <Label htmlFor="signup-owner-email">Email</Label>
+                    <Label htmlFor="owner-signup-email">Email</Label>
                     <Input
-                      id="signup-owner-email"
+                      id="owner-signup-email"
                       type="email"
                       placeholder="owner@example.com"
                       value={email}
@@ -193,13 +248,43 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="signup-owner-password">Password</Label>
+                    <Label htmlFor="owner-phone">Phone Number</Label>
                     <Input
-                      id="signup-owner-password"
+                      id="owner-phone"
+                      type="tel"
+                      placeholder="+91 9876543210"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="owner-business-name">Business Name</Label>
+                    <Input
+                      id="owner-business-name"
+                      placeholder="Your Parking Business"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="owner-business-address">Business Address</Label>
+                    <Input
+                      id="owner-business-address"
+                      placeholder="123 Business Street, City"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="owner-signup-password">Password</Label>
+                    <Input
+                      id="owner-signup-password"
                       type="password"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="owner-confirm-password">Confirm Password</Label>
+                    <Input
+                      id="owner-confirm-password"
+                      type="password"
+                      placeholder="••••••••"
                     />
                   </div>
                   <Button 
@@ -207,7 +292,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                     onClick={() => handleLogin('owner')}
                     disabled={loading || !email || !password}
                   >
-                    {loading ? 'Creating account...' : 'Sign up as Owner'}
+                    {loading ? 'Creating account...' : 'Create Owner Account'}
                   </Button>
                 </div>
               </TabsContent>

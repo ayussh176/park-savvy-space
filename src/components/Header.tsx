@@ -36,19 +36,6 @@ export function Header() {
             <Link to="/" className="text-foreground hover:text-primary transition-colors">
               Home
             </Link>
-            {isAuthenticated && (
-              <>
-                <Link 
-                  to={`/${user?.type}`} 
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <Link to="/profile" className="text-foreground hover:text-primary transition-colors">
-                  Profile
-                </Link>
-              </>
-            )}
           </nav>
 
           {/* Actions */}
@@ -116,24 +103,6 @@ export function Header() {
               >
                 Home
               </Link>
-              {isAuthenticated && (
-                <>
-                  <Link 
-                    to={`/${user?.type}`} 
-                    className="py-2 text-foreground hover:text-primary transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link 
-                    to="/profile" 
-                    className="py-2 text-foreground hover:text-primary transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                </>
-              )}
             </div>
           </nav>
         )}
