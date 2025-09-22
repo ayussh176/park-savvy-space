@@ -23,6 +23,7 @@ const BookingFlow = () => {
   const [bookingData, setBookingData] = useState({
     slotId: '',
     vehicleNumber: '',
+    vehicleType: '',
     date: '',
     startTime: '',
     duration: '',
@@ -53,14 +54,18 @@ const BookingFlow = () => {
 
   const handleSlotSelection = (slotId: string) => {
     setBookingData(prev => ({ ...prev, slotId }));
+    if (!bookingData.vehicleType) {
+      // Show vehicle type selection first
+      return;
+    }
     setStep(2);
   };
 
   const handleBookingDetails = () => {
-    if (!bookingData.vehicleNumber || !bookingData.date || !bookingData.startTime || !bookingData.duration) {
+    if (!bookingData.vehicleNumber || !bookingData.vehicleType || !bookingData.date || !bookingData.startTime || !bookingData.duration) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all booking details",
+        description: "Please fill in all booking details including vehicle type",
         variant: "destructive"
       });
       return;
@@ -90,38 +95,75 @@ const BookingFlow = () => {
   const renderSlotSelection = () => (
     <Card className="shadow-card">
       <CardHeader>
-        <CardTitle>Select a Parking Slot</CardTitle>
-        <p className="text-muted-foreground">Choose from {availableSlots.length} available slots</p>
+        <CardTitle>Select Vehicle Type & Parking Slot</CardTitle>
+        <p className="text-muted-foreground">First select your vehicle type, then choose from {availableSlots.length} available slots</p>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-          {availableSlots.slice(0, 32).map((slot) => (
+      <CardContent className="space-y-6">
+        {/* Vehicle Type Selection */}
+        <div>
+          <Label className="text-base font-medium mb-3 block">Vehicle Type</Label>
+          <div className="grid grid-cols-2 gap-4">
             <Button
-              key={slot.id}
-              variant={slot.status === 'available' ? 'outline' : 'secondary'}
-              className="h-12 text-xs"
-              disabled={slot.status !== 'available'}
-              onClick={() => handleSlotSelection(slot.id)}
+              variant={bookingData.vehicleType === 'car' ? 'default' : 'outline'}
+              className="h-16 flex flex-col gap-2"
+              onClick={() => setBookingData(prev => ({ ...prev, vehicleType: 'car' }))}
             >
-              {slot.slotNumber}
+              <Car className="h-6 w-6" />
+              <span>Car</span>
             </Button>
-          ))}
-        </div>
-        
-        <div className="mt-6 flex gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 border-2 border-primary rounded"></div>
-            <span>Available</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-muted rounded"></div>
-            <span>Occupied</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-warning rounded"></div>
-            <span>Reserved</span>
+            <Button
+              variant={bookingData.vehicleType === 'bike' ? 'default' : 'outline'}
+              className="h-16 flex flex-col gap-2"
+              onClick={() => setBookingData(prev => ({ ...prev, vehicleType: 'bike' }))}
+            >
+              <Car className="h-6 w-6" />
+              <span>Bike</span>
+            </Button>
           </div>
         </div>
+
+        {/* Slot Selection */}
+        {bookingData.vehicleType && (
+          <>
+            <div>
+              <Label className="text-base font-medium mb-3 block">Select Parking Slot</Label>
+              <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                {availableSlots.slice(0, 32).map((slot) => {
+                  const isHighlighted = slot.type === bookingData.vehicleType;
+                  return (
+                    <Button
+                      key={slot.id}
+                      variant={bookingData.slotId === slot.id ? 'default' : isHighlighted ? 'secondary' : 'outline'}
+                      className={`h-12 text-xs ${isHighlighted ? 'ring-2 ring-primary' : ''}`}
+                      disabled={slot.status !== 'available'}
+                      onClick={() => {
+                        setBookingData(prev => ({ ...prev, slotId: slot.id }));
+                        setStep(2);
+                      }}
+                    >
+                      {slot.slotNumber}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+            
+            <div className="flex gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-primary rounded"></div>
+                <span>Available</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-secondary border-2 border-primary rounded"></div>
+                <span>Recommended for {bookingData.vehicleType}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-muted rounded"></div>
+                <span>Occupied</span>
+              </div>
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );
@@ -133,6 +175,16 @@ const BookingFlow = () => {
         <p className="text-muted-foreground">Fill in your booking information</p>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div>
+          <Label htmlFor="vehicle-type">Vehicle Type</Label>
+          <Input
+            id="vehicle-type"
+            value={bookingData.vehicleType ? bookingData.vehicleType.charAt(0).toUpperCase() + bookingData.vehicleType.slice(1) : ''}
+            disabled
+            className="capitalize"
+          />
+        </div>
+        
         <div>
           <Label htmlFor="vehicle-number">Vehicle Number</Label>
           <Input

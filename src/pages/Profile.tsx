@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { User, Mail, Phone, Car, Calendar, Settings, CreditCard, Wallet } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -223,9 +224,11 @@ const Profile = () => {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Account Settings
+                <Button asChild variant="outline" className="w-full justify-start">
+                  <Link to="/profile">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Account Settings
+                  </Link>
                 </Button>
                 <Button 
                   variant="outline" 
@@ -242,14 +245,6 @@ const Profile = () => {
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
                   Payment Methods
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  onClick={() => setShowVehicleDialog(true)}
-                >
-                  <Car className="h-4 w-4 mr-2" />
-                  Manage Vehicles
                 </Button>
               </CardContent>
             </Card>

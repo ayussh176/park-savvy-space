@@ -65,9 +65,11 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link to="/profile">Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to={`/${user?.type}`}>Dashboard</Link>
-                  </DropdownMenuItem>
+                  {user?.type === 'owner' && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/owner">Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout}>
                     Logout

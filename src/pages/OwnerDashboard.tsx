@@ -161,6 +161,19 @@ const OwnerDashboard = () => {
                                 <Settings className="h-4 w-4 mr-1" />
                                 Manage
                               </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm"
+                                onClick={() => {
+                                  // Simple confirmation for delete
+                                  if (window.confirm(`Are you sure you want to delete "${space.name}"?`)) {
+                                    // In a real app, this would call an API
+                                    window.location.reload();
+                                  }
+                                }}
+                              >
+                                Delete
+                              </Button>
                               <Button asChild variant="hero" size="sm">
                                 <Link to={`/parking/${space.id}`}>View</Link>
                               </Button>
@@ -192,12 +205,6 @@ const OwnerDashboard = () => {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button asChild variant="outline" className="w-full justify-start">
-                  <Link to="/list-parking">
-                    <Plus className="h-4 w-4 mr-2" />
-                    List New Space
-                  </Link>
-                </Button>
                 <Button asChild variant="outline" className="w-full justify-start">
                   <Link to="/analytics">
                     <BarChart3 className="h-4 w-4 mr-2" />

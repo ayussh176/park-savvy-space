@@ -23,6 +23,11 @@ const Index = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setSelectedLocation([position.coords.longitude, position.coords.latitude]);
+          // Scroll to parking spaces section
+          const parkingSection = document.getElementById('parking-spaces-section');
+          if (parkingSection) {
+            parkingSection.scrollIntoView({ behavior: 'smooth' });
+          }
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -89,7 +94,7 @@ const Index = () => {
       </section>
 
       {/* Recommended Parking Spaces */}
-      <section className="py-12 px-4">
+      <section id="parking-spaces-section" className="py-12 px-4">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-8">Recommended Parking Spaces</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
