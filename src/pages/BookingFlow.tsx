@@ -130,34 +130,42 @@ const BookingFlow = () => {
                 Select Parking Slot - {bookingData.vehicleType.charAt(0).toUpperCase() + bookingData.vehicleType.slice(1)} Slots
               </Label>
               <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                {availableSlots.slice(0, 32)
-                  .filter(slot => slot.type === bookingData.vehicleType)
-                  .map((slot) => (
-                    <Button
-                      key={slot.id}
-                      variant={bookingData.slotId === slot.id ? 'default' : 'secondary'}
-                      className={`h-12 text-xs ring-2 ring-primary ${bookingData.slotId === slot.id ? 'bg-primary' : 'bg-secondary hover:bg-secondary/80'}`}
-                      disabled={slot.status !== 'available'}
-                      onClick={() => {
-                        setBookingData(prev => ({ ...prev, slotId: slot.id }));
-                        setStep(2);
-                      }}
-                    >
-                      {slot.slotNumber}
-                    </Button>
-                  ))}
-                {availableSlots.slice(0, 32)
-                  .filter(slot => slot.type !== bookingData.vehicleType)
-                  .map((slot) => (
-                    <Button
-                      key={slot.id}
-                      variant="outline"
-                      className="h-12 text-xs opacity-40"
-                      disabled={true}
-                    >
-                      {slot.slotNumber}
-                    </Button>
-                  ))}
+                {availableSlots.slice(0, 32).map((slot) => {
+                  const isMatchingType = slot.type === bookingData.vehicleType;
+                  const isSelected = bookingData.slotId === slot.id;
+                  
+                  if (isMatchingType) {
+                    return (
+                      <Button
+                        key={slot.id}
+                        variant={isSelected ? 'default' : 'secondary'}
+                        className={`h-12 text-xs font-bold border-2 transition-all duration-200 ${
+                          isSelected 
+                            ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-105' 
+                            : 'bg-secondary/80 border-primary/50 hover:bg-secondary hover:border-primary hover:scale-105 font-extrabold'
+                        }`}
+                        disabled={slot.status !== 'available'}
+                        onClick={() => {
+                          setBookingData(prev => ({ ...prev, slotId: slot.id }));
+                          setStep(2);
+                        }}
+                      >
+                        {slot.slotNumber}
+                      </Button>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        key={slot.id}
+                        variant="outline"
+                        className="h-12 text-xs opacity-20 bg-muted/30 text-muted-foreground/50 border-muted/30 cursor-not-allowed"
+                        disabled={true}
+                      >
+                        {slot.slotNumber}
+                      </Button>
+                    );
+                  }
+                })}
               </div>
             </div>
             
