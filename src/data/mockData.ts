@@ -156,6 +156,34 @@ export const mockParkingSpaces: ParkingSpace[] = [
       status: Math.random() > 0.4 ? 'available' : 'booked',
       pricePerHour: 25,
     }))
+  },
+  {
+    id: '5',
+    name: 'City Bike Hub',
+    address: '42 Cycle Street, Green Zone',
+    coordinates: [77.2180, 28.6120],
+    type: 'covered',
+    category: 'commercial',
+    vehicleTypes: ['bike'],
+    pricePerHour: 15,
+    totalSlots: 50,
+    availableSlots: 32,
+    rating: 4.4,
+    distance: 1.5,
+    image: '/api/placeholder/400/300',
+    amenities: ['CCTV', 'Security', 'Bike Repair', 'Helmet Storage'],
+    owner: {
+      id: 'owner5',
+      name: 'Bike Hub Corp',
+      phone: '+91 9876543214'
+    },
+    slots: Array.from({ length: 50 }, (_, i) => ({
+      id: `bike-slot-${i + 1}`,
+      slotNumber: `B${i + 1}`,
+      type: 'bike',
+      status: Math.random() > 0.6 ? 'available' : 'booked',
+      pricePerHour: 15,
+    }))
   }
 ];
 
