@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Plus, Building, BarChart3, Settings, MapPin, Car, DollarSign, Calendar } from 'lucide-react';
+import { Plus, Building, BarChart3, Settings, MapPin, Car, DollarSign, Calendar, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { ManageParkingDialog } from '@/components/ManageParkingDialog';
+import { EditParkingDialog } from '@/components/EditParkingDialog';
 import { SubscriptionPlansDialog } from '@/components/SubscriptionPlansDialog';
 import { mockParkingSpaces } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,6 +15,7 @@ const OwnerDashboard = () => {
   const { user } = useAuth();
   const [selectedParkingSpace, setSelectedParkingSpace] = useState<any>(null);
   const [showManageDialog, setShowManageDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   
   // Filter parking spaces owned by current user
@@ -155,6 +157,17 @@ const OwnerDashboard = () => {
                                 size="sm"
                                 onClick={() => {
                                   setSelectedParkingSpace(space);
+                                  setShowEditDialog(true);
+                                }}
+                              >
+                                <Edit className="h-4 w-4 mr-1" />
+                                Edit
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedParkingSpace(space);
                                   setShowManageDialog(true);
                                 }}
                               >
@@ -273,11 +286,18 @@ const OwnerDashboard = () => {
       </div>
 
       {selectedParkingSpace && (
-        <ManageParkingDialog
-          open={showManageDialog}
-          onOpenChange={setShowManageDialog}
-          parkingSpace={selectedParkingSpace}
-        />
+        <>
+          <EditParkingDialog
+            open={showEditDialog}
+            onOpenChange={setShowEditDialog}
+            parkingSpace={selectedParkingSpace}
+          />
+          <ManageParkingDialog
+            open={showManageDialog}
+            onOpenChange={setShowManageDialog}
+            parkingSpace={selectedParkingSpace}
+          />
+        </>
       )}
 
       <SubscriptionPlansDialog

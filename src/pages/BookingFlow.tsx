@@ -126,15 +126,17 @@ const BookingFlow = () => {
         {bookingData.vehicleType && (
           <>
             <div>
-              <Label className="text-base font-medium mb-3 block">Select Parking Slot</Label>
+              <Label className="text-base font-medium mb-3 block">
+                Select Parking Slot - {bookingData.vehicleType.charAt(0).toUpperCase() + bookingData.vehicleType.slice(1)} Slots
+              </Label>
               <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                {availableSlots.slice(0, 32).map((slot) => {
-                  const isHighlighted = slot.type === bookingData.vehicleType;
-                  return (
+                {availableSlots.slice(0, 32)
+                  .filter(slot => slot.type === bookingData.vehicleType)
+                  .map((slot) => (
                     <Button
                       key={slot.id}
-                      variant={bookingData.slotId === slot.id ? 'default' : isHighlighted ? 'secondary' : 'outline'}
-                      className={`h-12 text-xs ${isHighlighted ? 'ring-2 ring-primary' : ''}`}
+                      variant={bookingData.slotId === slot.id ? 'default' : 'secondary'}
+                      className={`h-12 text-xs ring-2 ring-primary ${bookingData.slotId === slot.id ? 'bg-primary' : 'bg-secondary hover:bg-secondary/80'}`}
                       disabled={slot.status !== 'available'}
                       onClick={() => {
                         setBookingData(prev => ({ ...prev, slotId: slot.id }));
@@ -143,23 +145,34 @@ const BookingFlow = () => {
                     >
                       {slot.slotNumber}
                     </Button>
-                  );
-                })}
+                  ))}
+                {availableSlots.slice(0, 32)
+                  .filter(slot => slot.type !== bookingData.vehicleType)
+                  .map((slot) => (
+                    <Button
+                      key={slot.id}
+                      variant="outline"
+                      className="h-12 text-xs opacity-40"
+                      disabled={true}
+                    >
+                      {slot.slotNumber}
+                    </Button>
+                  ))}
               </div>
             </div>
             
             <div className="flex gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-primary rounded"></div>
-                <span>Available</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-secondary border-2 border-primary rounded"></div>
-                <span>Recommended for {bookingData.vehicleType}</span>
+                <span>Available for {bookingData.vehicleType}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-muted rounded"></div>
-                <span>Occupied</span>
+                <div className="w-4 h-4 bg-primary rounded"></div>
+                <span>Selected</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-muted opacity-40 rounded"></div>
+                <span>Not for {bookingData.vehicleType}</span>
               </div>
             </div>
           </>
