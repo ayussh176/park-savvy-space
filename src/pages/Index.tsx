@@ -1,19 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, MapPin, Star, Clock, Shield, Car } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { mockParkingSpaces } from '@/data/mockData';
+import { parkingAPI, type ParkingSpace } from '@/lib/api';
 import { Header } from '@/components/Header';
 import { MapComponent } from '@/components/MapComponent';
+import { toast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<[number, number] | null>(null);
+  const [parkingSpaces, setParkingSpaces] = useState<ParkingSpace[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredParkingSpaces = mockParkingSpaces.filter(space =>
+  // Fetch parking spaces on component mount
+  useEffect(() => {
+    const fetchParkingSpaces = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const spaces = await parkingAPI.getAllSpaces();
+        setParkingSpaces(spaces);
+      } catch (error) {
+        console.error('Failed to fetch parking spaces:', error);
+        setError('Failed to load parking spaces. Please try again.');
+        // Show error toast
+        toast({
+          title: "Error",
+          description: "Failed to load parking spaces. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParkingSpaces();
+  }, []);
+
+  // Filter parking spaces based on search query
+  const filteredParkingSpaces = parkingSpaces.filter(space =>
     space.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     space.address.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -31,8 +61,49 @@ const Index = () => {
         },
         (error) => {
           console.error('Error getting location:', error);
+          toast({
+            title: "Location Error",
+            description: "Unable to get your current location. Please try again.",
+            variant: "destructive"
+          });
         }
       );
+    } else {
+      toast({
+        title: "Location Not Supported",
+        description: "Geolocation is not supported by your browser.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSearch = async () => {
+    if (searchQuery.trim()) {
+      try {
+        setLoading(true);
+        const searchResults = await parkingAPI.searchSpaces(searchQuery);
+        setParkingSpaces(searchResults);
+      } catch (error) {
+        console.error('Search failed:', error);
+        toast({
+          title: "Search Error",
+          description: "Failed to search parking spaces. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // If search query is empty, fetch all spaces
+      try {
+        setLoading(true);
+        const spaces = await parkingAPI.getAllSpaces();
+        setParkingSpaces(spaces);
+      } catch (error) {
+        console.error('Failed to fetch parking spaces:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -60,18 +131,29 @@ const Index = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 bg-background/80 border-primary/20"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch();
+                    }
+                  }}
                 />
               </div>
               <Button
                 onClick={handleLocationSelect}
                 variant="secondary"
                 className="bg-background/80 text-foreground hover:bg-background"
+                disabled={loading}
               >
                 <MapPin className="h-4 w-4" />
                 Current Location
               </Button>
-              <Button variant="hero" size="lg">
-                Search
+              <Button 
+                size="lg" 
+                variant="hero"
+                onClick={handleSearch}
+                disabled={loading}
+              >
+                {loading ? 'Searching...' : 'Search'}
               </Button>
             </div>
           </div>
@@ -85,7 +167,7 @@ const Index = () => {
             Parking Spaces Near You
           </h2>
           <div className="h-96 rounded-xl overflow-hidden shadow-card bg-muted">
-            <MapComponent 
+            <MapComponent
               parkingSpaces={filteredParkingSpaces}
               userLocation={selectedLocation}
             />
@@ -94,12 +176,49 @@ const Index = () => {
       </section>
 
       {/* Recommended Parking Spaces */}
-      <section id="parking-spaces-section" className="py-12 px-4">
+      <section className="py-12 px-4" id="parking-spaces-section">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-8">Recommended Parking Spaces</h2>
+          
+          {error && (
+            <div className="text-center py-8">
+              <p className="text-destructive mb-4">{error}</p>
+              <Button 
+                onClick={() => window.location.reload()} 
+                variant="outline"
+              >
+                Retry
+              </Button>
+            </div>
+          )}
+          
+          {loading && (
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <p className="mt-4 text-muted-foreground">Loading parking spaces...</p>
+            </div>
+          )}
+          
+          {!loading && !error && filteredParkingSpaces.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground mb-4">No parking spaces found.</p>
+              {searchQuery && (
+                <Button 
+                  onClick={() => {
+                    setSearchQuery('');
+                    handleSearch();
+                  }} 
+                  variant="outline"
+                >
+                  Clear Search
+                </Button>
+              )}
+            </div>
+          )}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredParkingSpaces.map((space) => (
-              <Card key={space.id} className="group hover:shadow-elevated transition-all duration-300 transform hover:scale-[1.02]">
+              <Card className="group hover:shadow-elevated transition-all duration-300 transform hover:scale-[1.02]" key={space.id}>
                 <CardHeader className="pb-4">
                   <div className="aspect-video bg-gradient-card rounded-lg mb-4 flex items-center justify-center">
                     <Car className="h-12 w-12 text-primary" />
@@ -129,10 +248,10 @@ const Index = () => {
                   </div>
                   
                   <div className="flex gap-2 mb-4">
-                    <Badge variant="secondary" className="capitalize">
+                    <Badge className="capitalize" variant="secondary">
                       {space.type}
                     </Badge>
-                    <Badge variant="outline" className="flex items-center gap-1">
+                    <Badge className="flex items-center gap-1" variant="outline">
                       <Clock className="h-3 w-3" />
                       {space.distance}km away
                     </Badge>
@@ -140,17 +259,17 @@ const Index = () => {
                   
                   <div className="flex gap-2 mb-4">
                     {space.amenities.slice(0, 3).map((amenity) => (
-                      <Badge key={amenity} variant="outline" className="text-xs">
+                      <Badge className="text-xs" key={amenity} variant="outline">
                         {amenity}
                       </Badge>
                     ))}
                   </div>
                   
                   <div className="flex gap-2">
-                    <Button asChild variant="outline" className="flex-1">
+                    <Button asChild className="flex-1" variant="outline">
                       <Link to={`/parking/${space.id}`}>View Details</Link>
                     </Button>
-                    <Button asChild variant="hero" className="flex-1">
+                    <Button asChild className="flex-1" variant="hero">
                       <Link to={`/book/${space.id}`}>Book Now</Link>
                     </Button>
                   </div>
