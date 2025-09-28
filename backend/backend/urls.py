@@ -1,5 +1,4 @@
 """Django URL configuration for park_savvy project."""
-
 from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
@@ -25,6 +24,8 @@ def api_root(request):
                 'token_refresh': '/api/v1/auth/token/refresh/',
                 'token_verify': '/api/v1/auth/token/verify/',
             },
+            'users': '/api/v1/users/',
+            'parking': '/api/v1/parking/',
             'docs': '/api/docs/',  # For future API documentation
         }
     })
@@ -44,10 +45,9 @@ urlpatterns = [
     # API versioning
     path('api/v1/', api_root, name='api-v1-root'),
     
-    # Future app URLs will be added here
-    # path('api/v1/parking/', include('parking.urls')),
-    # path('api/v1/users/', include('users.urls')),
-    # path('api/v1/bookings/', include('bookings.urls')),
+    # App URLs
+    path('api/v1/users/', include('users.urls')),
+    path('api/v1/parking/', include('parking.urls')),
 ]
 
 # Serve media files during development
