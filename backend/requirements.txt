@@ -6,14 +6,17 @@ Django==4.2.7
 # Django REST Framework for API development
 djangorestframework==3.14.0
 
+# JWT Authentication for REST API
+djangorestframework-simplejwt==5.3.0
+
 # CORS headers for frontend integration
 django-cors-headers==4.3.1
 
-# Environment variables management
-python-decouple==3.8
-
 # Database (PostgreSQL support for production)
 psycopg2-binary==2.9.9
+
+# Environment variables management
+python-decouple==3.8
 
 # Development and testing
 django-extensions==3.2.3
@@ -24,3 +27,7 @@ whitenoise==6.5.0
 
 # Timezone support
 pytz==2023.3
+
+# Additional utilities
+Pillow==10.0.1  # For image handling
+requests==2.31.0  # For HTTP requests
